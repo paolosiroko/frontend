@@ -1,5 +1,12 @@
+interface TravelResponse {
+  visa_requirements: string;
+  passport_requirements: string;
+  additional_documents: string;
+  travel_advisories: string;
+}
+
 interface ResponseDisplayProps {
-  response: { response: any; original_question: string };
+  response: { response: TravelResponse; original_question: string };
 }
 
 export default function ResponseDisplay({ response }: ResponseDisplayProps) {
