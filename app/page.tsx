@@ -7,7 +7,7 @@ import QueryHistory from "./components/QueryHistory";
 export default function Home() {
   const [response, setResponse] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (question: string) => {
     setLoading(true);
@@ -21,8 +21,10 @@ export default function Home() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.detail || "Something went wrong");
       setResponse(data);
-    } catch (err) {
-      setError(err.message);
+    } catch (err: unknown) {
+      // Type assertion or check to safely access err.message
+      const errorMessage = err instanceof Error ? err.message : "An unknown error occurred";
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -67,18 +69,7 @@ export default function Home() {
               {error}
             </div>
           )}
-            {loading && (
-              <div className="card">
-                <div className="animate-pulse space-y-4">
-                  <div className="h-6 bg-gray-200 rounded w-3/4"></div>
-                  <div className="space-y-2">
-                    <div className="h-4 bg-gray-200 rounded w-full"></div>
-                    <div className="h-4 bg-gray-200 rounded w-5/6"></div>
-                    <div className="h-4 bg-gray-200 rounded w-4/5"></div>
-                  </div>
-                </div>
-              </div>
-            )}
+
           {/* Response Display */}
           {response && <ResponseDisplay response={response} />}
 
@@ -89,7 +80,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="py-6 text-center text-secondary">
-        <p>&copy; 2025 Travel Assistant. All rights reserved.</p>
+        <p>© 2025 Travel Assistant. All rights reserved.</p>
       </footer>
     </div>
   );
